@@ -5,5 +5,7 @@ Names of owners are links to pages with a list of their pets.
 # How to run the application:  
 After downloading the project from the GitHub Visual Studio can not find references.  
 The WORKING project lies under the link to Google disk:  
-https://drive.google.com/open?id=0B6jOFzdyI7LfVDE3NldyLXNyclE
+https://drive.google.com/open?id=0B6jOFzdyI7LfVDE3NldyLXNyclE  
+Wish you success!
+
 
