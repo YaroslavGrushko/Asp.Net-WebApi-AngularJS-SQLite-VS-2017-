@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OwnersPetsVS2017.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,13 +8,14 @@ using System.Web.Http;
 
 namespace OwnersPetsVS2017.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class ValuesController : ApiController
     {
-        // GET api/values
-        public IEnumerable<string> Get()
+        // GET api/values        
+        public List<OwnerCount> Get()
         {
-            return new string[] { "value1", "value2" };
+            return OwnersPetsVS2017.Models.FromToDB.GetOwners();
+            //return new string[] { "value1", "value2" };
         }
 
         // GET api/values/5
@@ -23,8 +25,9 @@ namespace OwnersPetsVS2017.Controllers
         }
 
         // POST api/values
-        public void Post([FromBody]string value)
+        public void Post([FromBody]Owner value)
         {
+            OwnersPetsVS2017.Models.FromToDB.AddOwner(value.OwnerName);
         }
 
         // PUT api/values/5
@@ -35,6 +38,14 @@ namespace OwnersPetsVS2017.Controllers
         // DELETE api/values/5
         public void Delete(int id)
         {
+        }
+    }
+    public class DeleteController : ApiController
+    {
+        // POST api/delete
+        public void Post([FromBody]Owner value)
+        {
+            OwnersPetsVS2017.Models.FromToDB.DeleteOwner(value.OwnerName);
         }
     }
 }

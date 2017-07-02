@@ -1,0 +1,47 @@
+﻿.center {
+    text-align: center;
+}.MyTitle {
+    font-size: 64px;
+}
+
+.add {
+    display: inline-block;
+    text-align: center;
+}
+
+.inputText {
+    display: inline-block;
+    
+}
+.forFooter {
+    position: fixed;
+    bottom: 0;
+}
+.btn-link {
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+    color: #0000EE;
+    padding: 0;
+    text-decoration: underline;
+    font-family: inherit;
+    font-size: inherit;
+}
+.mydiv {
+    position: fixed;
+    /*  top: 50%;*/
+    left: 50%;
+    width: 30em;
+    height: 9em;
+    /* margin-top: -9em;*/ /*set to a negative number 1/2 of your height*/
+    margin-left: -15em; /*set to a negative number 1/2 of your width*/
+    border: 1px solid #ccc;
+}
+#Totalcount {
+    margin-left: -20em;
+}
+
+tr {
+    border: 3px solid #C0C0C0;
+}

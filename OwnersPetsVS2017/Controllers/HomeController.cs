@@ -10,7 +10,7 @@ namespace OwnersPetsVS2017.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
+            ViewBag.Title = "Owners";
 
             return View();
         }

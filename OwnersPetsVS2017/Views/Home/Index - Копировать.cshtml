@@ -1,0 +1,85 @@
+﻿@section css {
+    <link href="@Url.Content("~/Content/MyCss/MyStyle.css")" rel="stylesheet" />
+}
+
+
+
+<br/>
+<body  class="center" ng-app>
+
+    <div class="MyTitle"><b>ALL USERS</b></div>
+    <br />
+    
+    <label>Enter Name:</label>
+    <input type="text" ng-model="name" placeholder="Name">
+
+    <h1>Welcome {{name}}!</h1>
+    @*<form >
+
+
+        <input type="text" id="newOwn" ng-model="user.name" placeholder="Enter Pet Owner's Name" class="form-control inputText" style="min-width:10%" />
+        <input type="button" class="btn btn-primary add" value="Add" ng-submit='createUser();'/>
+    </form>
+    <div ng-controller="TestController">
+        <ul ng-model="person">
+            <li>FirstName: {{person.petName}}</li>            
+        </ul>
+    </div>*@
+
+    @*<script type="text/javascript">
+        //function UserController($scope, $http) {
+        //    //$scope.createUser = function () {
+        //    //    //OwnerNameValue = document.getElementById('newOwn').value;
+        //    //   // var data = { "OwnerName": OwnerNameValue, "PetName": "sharick", "IsApproved": true, "IsOnlineNow": true, "IsChecked": true };
+        //    //    $http.post(
+        //    //        '/api/values',
+        //    //        JSON.stringify(data),
+        //    //        {
+        //    //            headers: {
+        //    //                'Content-Type': 'application/json'
+        //    //            }
+        //    //        }
+        //    //    ).success(function (data) {
+        //    //        // $scope.person = data;
+        //    //    });
+        //    //}
+        function UserController($scope, $http) {
+            $scope.user = {};
+            $scope.createUser = function () {
+                $http({
+                    method: 'POST',
+                    url: '/api/values',
+                    data: $scope.user
+                
+                }).success(function (data) {
+               // $scope.person = data;
+            });
+            }
+        }
+        
+     
+    </script>*@
+    <div ng-controller='phoneController'>
+        <p>Название: {{phone.name}}</p>
+        <p>Цена: {{phone.price}} $</p>
+        <p>Производитель: {{phone.company.name}}</p>
+    </div>
+    
+    
+    <script type="text/javascript">
+    var myApp = angular.module('myApp', []);
+    myApp.controller('phoneController', function ($scope) {
+
+        $scope.phone = {
+
+            name: 'Nokia Lumia 630',
+            year: 2014,
+            price: 200,
+            company: {
+                name: 'Nokia',
+                country: 'Финляндия'
+            }
+        }
+    });
+    </script>
+</body>

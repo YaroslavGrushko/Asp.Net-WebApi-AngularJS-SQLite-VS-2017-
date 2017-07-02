@@ -1,24 +1,129 @@
-﻿<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+﻿@section css {
+    <link href="@Url.Content("~/Content/MyCss/MyStyle.css")" rel="stylesheet" />
+}
+
+
+
+
+<div class="center" ng-app="Owner">
+    <div class="MyTitle"><b>ALL USERS</b></div>
+    <script>
+        var app = angular.module('Owner', []);
+            app.controller('OwnerAddcontroller', ['$scope', '$http', function ($scope, $http) {
+                $scope.submit = function () {
+                    if ($scope.Name) {
+                        var owner = {
+                            "OwnerName": $scope.Name
+                        }
+                        $http.post('/api/values/', owner).then(function (data) {
+                            location.reload();
+                            //alert("Added Successfully!!");
+                        }
+                        );
+                    }
+                }
+            }
+        ]);
+            
+                
+        app.controller('customersCtrl',
+            function customersCtrl($scope, $http) {
+                
+            //
+            $scope.uploadTable = function (index) {
+                $http({ method: 'GET', url: '/api/values/' }).
+                    then(function success(response) {
+
+                        if (!index) { $scope.curPageIndex = 1; } else { $scope.curPageIndex = index;}
+                        //инициализация массива с индексами страниц:
+                        $scope.pageIndexes = [];
+                        //кол-во владельцев(таблиц) в БД:
+                        $scope.totalCount = response.data.length;
+                        //кол-во наборов по 3 элем-та:
+                        $scope.totalPageCount = parseInt($scope.totalCount / 3);
+                        if ($scope.totalCount % 3 != 0) { $scope.totalPageCount += 1; }
+                        //заполняем массив с индексами страниц:
+                        for (var pageIndex = 1; pageIndex <= $scope.totalPageCount; pageIndex++) $scope.pageIndexes.push(pageIndex.toString());
+
+                        //инициализируем временную переменную списка владельцев (с кол-м животных):
+                        var bufOwnerItems = [];
+
+                        //диапазон из массива  response.data который выводим на страницу (передаем в $scope.ownerItems):
+                        var from = ($scope.curPageIndex - 1) * 3;
+                        var to = $scope.curPageIndex * 3 - 1;
+                        //выбераем элементы соответствующие текущему набору (curPageIndex):
+                        for (var i = from; i <= to; i++) {
+                            var item = response.data[i];
+                            if(item)bufOwnerItems.push(item);
+
+                        }
+                        $scope.ownerItems = bufOwnerItems;
+
+                    });    
+            };
+
+            $scope.deleteOwner = function (name) {                
+                var owner = {
+                    "OwnerName": name
+                }
+                
+                    
+                $http.post('/api/delete/', owner).then(function (data) {
+                        location.reload();
+                        //alert("Deleted Successfully!!");
+                    }
+                    );
+            };
+            $scope.pageSelector = function (index) {
+                $scope.uploadTable(index);
+            };
+                //вызов функции Get с WebApi контроллера: 
+            $scope.uploadTable();
+
+                });
+        
+    </script>
+
+    <form ng-submit="submit()" ng-controller="OwnerAddcontroller">
+        <input type="text" ng-model="Name" placeholder="Enter Pet Owner's Name" class="form-control inputText" style="min-width:10%" required />
+        <input type="submit" class="btn btn-primary add" value="Add" /> 
+
+    </form>
+
+    
+    <hr />
+    
+    <div ng-controller="customersCtrl" >
+        <text id="Totalcount">Total count :{{totalCount}}</text>
+       
+        <table class="mydiv" >
+            <th>&emsp; &emsp;&emsp; Name</th><th></th><th>&emsp;&emsp; &emsp;&emsp; &emsp;Pets Count</th>
+            <tr ng-repeat="ownerItem in ownerItems">                                                
+                <td> <a ng-href="@Url.Action("pet", "Pet")?ownername={{ownerItem.OwnerName}}"> {{ownerItem.OwnerName}}</a>
+                <td> <a href=# ng-click="deleteOwner(ownerItem.OwnerName)"> <font color="red">x</font> </a> &emsp; </td>
+                <td>{{ownerItem.petCount}}</td>
+                    
+</tr>            
+        </table>
+        <br/><br /><br /><br /><br /><br /><br /><br />
+      <text ng-repeat="index in  pageIndexes">  <a href="#"  ng-click="pageSelector(index)">{{index}},</a>&emsp;</text>
+
+    </div>
+    
+    
 </div>
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>ASP.NET Web API is a framework that makes it easy to build HTTP services that reach
-        a broad range of clients, including browsers and mobile devices. ASP.NET Web API
-        is an ideal platform for building RESTful applications on the .NET Framework.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301870">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301871">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301872">Learn more &raquo;</a></p>
-    </div>
-</div>
+
+<script>    
+    
+    //angular.bootstrap(document.getElementById("App2"), ['myApp']);
+</script>
+
+
+    
+
+    
+
+
+
+
+

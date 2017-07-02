@@ -1,0 +1,119 @@
+﻿@model Owner
+@using OwnersPetsVS2017.Models
+
+@section css {
+    <link href="@Url.Content("~/Content/MyCss/MyStyle.css")" rel="stylesheet" />
+}
+
+
+<div class="center" ng-app="Pet">
+    <div class="MyTitle"><b>@Model.OwnerName<text>'s</text> pets</b></div>
+    <script>
+        //для добавления животного в выбранную таблицу владельца:
+        var app = angular.module('Pet', []);
+        app.controller('PetAddcontroller', ['$scope', '$http', function ($scope, $http) {
+                $scope.submit = function () {
+                    if ($scope.petName) {
+                        var PetOwner = {
+                            "OwnerName":"@Model.OwnerName",
+                            "PetName": $scope.petName
+                        }
+                        $http.post('/api/PetValues/', PetOwner).then(function (data) {
+                            location.reload();
+                           // alert("Added Successfully!!");
+                        }
+                        );
+                    }
+                }
+            }
+        ]);
+        //для вывода таблицы животных:
+        app.controller('petsCtrl',
+            function petsCtrl($scope, $http) {
+
+                $scope.ShowTable = function (index) {
+
+                    var owner = {
+                        "OwnerName": "@Model.OwnerName"
+                    }
+                    $http.post('/api/GetPets/', owner).
+                        then(function success(response) {
+                            $scope.names = response.data;
+                            //-----------------------------
+                            if (!index) { $scope.curPageIndex = 1; } else { $scope.curPageIndex = index; }
+                            //инициализация массива с индексами страниц:
+                            $scope.pageIndexes = [];
+                            //кол-во животных в БД:
+                            $scope.totalCount = response.data.length;
+                            //кол-во наборов по 3 элем-та:
+                            $scope.totalPageCount = parseInt($scope.totalCount / 3);
+                            if ($scope.totalCount % 3 != 0) { $scope.totalPageCount += 1; }
+                            //заполняем массив с индексами страниц:
+                            for (var pageIndex = 1; pageIndex <= $scope.totalPageCount; pageIndex++) $scope.pageIndexes.push(pageIndex.toString());
+
+                            //инициализируем временную переменную списка животных:
+                            var bufPetItems = [];
+
+                            //диапазон из массива  response.data который выводим на страницу (передаем в $scope.ownerItems):
+                            var from = ($scope.curPageIndex - 1) * 3;
+                            var to = $scope.curPageIndex * 3 - 1;
+                            //выбераем элементы соответствующие текущему набору (curPageIndex):
+                            for (var i = from; i <= to; i++) {
+                                var item = response.data[i];
+                                if (item) bufPetItems.push(item);
+
+                            }
+                            $scope.petItems = bufPetItems;
+
+                            //-----------------------------
+                        });
+                };
+                //подгружаем таблицу при загрузке стираницы:
+                $scope.ShowTable();
+
+
+                $scope.deletePet = function (name) {
+                    var petOwner = {
+                        "OwnerName":"@Model.OwnerName",
+                        "PetName": name
+                    }
+
+                    $http.post('/api/DeletePet/', petOwner).then(function (data) {
+                        location.reload();
+                        //alert("Deleted Successfully!!");
+                    }
+                    );
+                };
+                //при нажатии на индекс страницы, загружается соответствующая страница:
+                $scope.pageSelector = function (index) {
+                    $scope.ShowTable(index);
+                };
+            });
+        </script>
+    <form ng-submit="submit()" ng-controller="PetAddcontroller">
+        <input type="text" ng-model="petName" placeholder="Enter Pet's Name" class="form-control inputText" style="min-width:10%" required />
+        <input type="submit" class="btn btn-primary add" value="Add" /> 
+
+    </form>
+    </br>
+    <hr />
+    <div ng-controller="petsCtrl">
+        <text id="Totalcount">Total count :{{totalCount}}</text>
+        <table class="mydiv">
+            <th>&emsp; &emsp;&emsp; Name</th><th></th>
+<tr ng-repeat="name in petItems" align="left">
+                <td>
+                    &emsp; &emsp;&emsp;  {{name}}
+                </td>
+                <td>  <a href=# ng-click="deletePet(name)"> <font color="red">x</font> </a> &emsp;</td>
+
+
+</tr>
+
+        </table>
+        <br /><br /><br /><br /><br /><br /><br /><br />
+        <text ng-repeat="index in  pageIndexes">  <a href="#" ng-click="pageSelector(index)">{{index}},</a>&emsp;</text>
+
+
+    </div>
+</div>
